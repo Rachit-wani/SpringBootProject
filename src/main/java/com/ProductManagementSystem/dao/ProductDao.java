@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
 
+import com.ProductManagementSystem.JPA.CategoryJPA;
 import com.ProductManagementSystem.JPA.ProductJPA;
+import com.ProductManagementSystem.entity.Category;
 import com.ProductManagementSystem.entity.Product;
 
 @Repository
@@ -18,8 +20,19 @@ public class ProductDao {
 	
 @Autowired
 private	ProductJPA pjpa;
+
+@Autowired
+private CategoryJPA cjpa;
+
+
+
 	
 	
+	public ProductDao(ProductJPA pjpa, CategoryJPA cjpa) {
+	this.pjpa = pjpa;
+	this.cjpa = cjpa;
+}
+
 	public Product Savepro(Product p)
 	{
 		return pjpa.save(p);
@@ -59,5 +72,25 @@ private	ProductJPA pjpa;
 		return pjpa.FindByType(name);
 	}
 	
+	
+	public void deleteall()
+	{
+		pjpa.deleteAll();
+	}
+	
+//	public Product saveProduct(Product product ,int categoryid)
+//	{
+//		Category cate= cjpa.findById(categoryid).orElse(null);
+//		
+//		if(cate!=null)
+//		{
+//			product.setCategory(cate);
+//		}
+//		return pjpa.save(product);
+//	}
+	public Category cfindbyid(int id)
+	{
+		return cjpa.findById(id).orElse(null);
+	}
 	
 }

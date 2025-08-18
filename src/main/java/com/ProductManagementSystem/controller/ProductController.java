@@ -1,8 +1,11 @@
 package com.ProductManagementSystem.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +14,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ProductManagementSystem.JPA.ProductJPA;
+import com.ProductManagementSystem.entity.Category;
 import com.ProductManagementSystem.entity.Product;
 import com.ProductManagementSystem.service.ProductService;
 import com.ProductManagementSystem.util.ResponseStructure;
 
+@RequestMapping("/Product")
 @RestController
 public class ProductController {
 	
@@ -27,6 +33,13 @@ private	ProductService pservice;
 	ProductJPA pjpa;
 	
 	
+	
+	
+	public ProductController(ProductService pservice) {
+		super();
+		this.pservice = pservice;
+	}
+
 	@PostMapping("/create")
 	public ResponseEntity<ResponseStructure<Product>> savedata(@RequestBody Product p)
 	{
@@ -104,6 +117,35 @@ private	ProductService pservice;
 	}
 	
 	
+	  @Value("${spring.datasource.url}")
+	    private String dbUrl;
+
+	    @Value("${spring.datasource.username}")
+	    private String dbUser;
+
+	    @Value("${spring.datasource.password}")
+	    private String dbPassword;
+
+	    @PostMapping("/a")
+	    public Map<String, String> printDbConfig() {
+	    	Map<String, String> res=   new  HashMap<String, String>();
+	        res.put("DB URL: " , dbUrl);
+	        res.put("DB User: " , dbUser);
+	        res.put("DB Password: " , dbPassword);
+	        
+	        return res;
+	    }
 	
+	    @DeleteMapping("/All")
+	public void DeleteAll()
+	{
+		pservice.DeletAll();
+	}
 	
+	    
+	    @PostMapping("/SaveProCat/{category}")
+	    public Product SaveProduct(@RequestBody Product product, @PathVariable int category)
+	    {
+	    	return pservice.saveproduct(product, category);
+	    }
 }

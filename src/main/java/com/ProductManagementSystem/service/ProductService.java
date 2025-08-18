@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.ProductManagementSystem.Exception.IdNotPresent;
+import com.ProductManagementSystem.JPA.CategoryJPA;
 import com.ProductManagementSystem.JPA.ProductJPA;
 import com.ProductManagementSystem.dao.ProductDao;
+import com.ProductManagementSystem.entity.Category;
 import com.ProductManagementSystem.entity.Product;
 import com.ProductManagementSystem.util.ResponseStructure;
 
@@ -26,7 +28,16 @@ public class ProductService {
 	
 	@Autowired
 private	ProductDao pdao;
-
+//	@Autowired
+//
+//
+//	
+//	public ProductService(ProductJPA productJPA, CategoryJPA categoryJPA  )
+//	{
+//		this.pdao= productJPA;
+//		this.categoryJPA = categoryJPA;
+//	}
+	
 	
 	public ResponseEntity<ResponseStructure<Product>> adddata(Product h)
 	{
@@ -41,6 +52,14 @@ private	ProductDao pdao;
 	}
 	
 	
+	public ProductService(ProductDao pdao) {
+	super();
+	this.pdao = pdao;
+}
+
+
+
+
 	public List<Product> Findall()
 	{
 		return pdao.Findall();
@@ -135,6 +154,22 @@ private	ProductDao pdao;
 //		PageRequest page1= PageRequest.of(page, size);
 //		return pdao.Findall(page1);
 //	}
+	
+	public void DeletAll()
+	{
+		 pdao.deleteall();
+	}
+	
+	
+	public Product saveproduct(Product product , int categoryid)
+	{
+		Category c= pdao.cfindbyid(categoryid);
+		if(c!=null)
+		{
+		product.setCategory(c);
+		}
+		return pdao.Savepro(product);
+	}
 	
 	
 }
